@@ -1,0 +1,9 @@
+﻿{
+  "source": "dockerized_labs\\sql_injection_lab\\app.py",
+  "expected_state": "vulnerable",
+  "valid_login_succeeds": true,
+  "incorrect_password_rejected": true,
+  "sql_injection_bypasses_login": true,
+  "apostrophe_handled_as_data": null,
+  "result": "PASS"
+}

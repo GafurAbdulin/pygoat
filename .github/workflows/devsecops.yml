@@ -1,0 +1,134 @@
+name: DevSecOps Lab 5
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sast_scan:
+    name: Bandit source scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install bandit==1.9.4
+      - name: Collect medium and high findings at all confidence levels
+        shell: bash
+        run: |
+          set +e
+          bandit -ll -r . -x ./evidence,./.git -f json -o bandit-all-confidence.json
+          status=$?
+          if [ "$status" -gt 1 ]; then exit "$status"; fi
+      - name: Apply the lab's medium severity and confidence gate
+        run: bandit -ll -ii -r . -x ./evidence,./.git -f json -o bandit-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-findings
+          path: bandit-*.json
+          if-no-files-found: error
+
+  image_scan:
+    name: Build and Docker Scout scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the repository image
+        run: docker build -f Dockerfile -t mytestapp:latest .
+      - name: Check DockerHub secrets
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          test -n "$DOCKERHUB_USERNAME" || { echo 'Missing DOCKERHUB_USERNAME secret'; exit 1; }
+          test -n "$DOCKERHUB_PASSWORD" || { echo 'Missing DOCKERHUB_PASSWORD secret'; exit 1; }
+      - name: Docker Scout critical and high CVEs
+        uses: docker/scout-action@v1.15.1
+        with:
+          dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          command: quickview,cves
+          image: local://mytestapp:latest
+          only-severities: critical,high
+          sarif-file: scout-report.sarif
+          exit-code: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-scout-findings
+          path: scout-report.sarif
+          if-no-files-found: error
+
+  dast_scan:
+    name: Deploy own image and run ZAP DAST
+    # Independent jobs keep DAST running when another scanner finds problems.
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build PyGoat from this commit
+        run: docker build -f Dockerfile -t pygoat-dast:latest .
+      - name: Initialize database and static files
+        run: |
+          mkdir -p "$RUNNER_TEMP/pygoat-data"
+          docker run --rm -v "$RUNNER_TEMP/pygoat-data:/data" pygoat-dast:latest sh -ec \
+            'python manage.py migrate --noinput && python manage.py seed_scoring && python manage.py populate_labs && cp /app/db.sqlite3 /data/db.sqlite3'
+      - name: Start PyGoat on loopback
+        run: |
+          docker run -d --name pygoat-lab5 -p 127.0.0.1:8000:8000 \
+            -v "$RUNNER_TEMP/pygoat-data/db.sqlite3:/app/db.sqlite3" \
+            pygoat-dast:latest
+      - name: Wait for an HTTP response below 400
+        shell: bash
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --location --max-time 5 http://127.0.0.1:8000/ -o /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker logs pygoat-lab5
+          exit 1
+      - name: ZAP baseline scan
+        shell: bash
+        run: |
+          mkdir -p zap-reports
+          chmod 777 zap-reports
+          set +e
+          docker run --rm --network host -v "$PWD/zap-reports:/zap/wrk:rw" \
+            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+            -t http://127.0.0.1:8000/ -m 1 -T 10 \
+            -r zap-report.html -J zap-report.json -w zap-report.md
+          status=$?
+          echo "$status" > zap-reports/exit-code.txt
+          # Codes 1 and 2 indicate alerts; code 3 indicates a scan failure.
+          if [ "$status" -gt 2 ]; then exit "$status"; fi
+          test -s zap-reports/zap-report.json
+          python scripts/summarize_zap.py zap-reports/zap-report.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Capture application logs
+        if: always()
+        run: docker logs pygoat-lab5 > zap-reports/application.log 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-findings
+          path: zap-reports/
+          if-no-files-found: error
+      - name: Remove the lab container
+        if: always()
+        run: docker rm -f pygoat-lab5 || true
+
+  patch_verification:
+    name: SQL injection regression check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install Flask==3.1.3
+      - run: python scripts/check_sql_injection.py --expect-vulnerable
