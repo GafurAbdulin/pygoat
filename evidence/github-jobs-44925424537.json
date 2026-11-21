@@ -1,0 +1,421 @@
+{
+  "total_count": 4,
+  "jobs": [
+    {
+      "id": 136910324939,
+      "run_id": 44925424537,
+      "workflow_name": "DevSecOps Lab 5",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/runs/44925424537",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOV2xkzM8AAAAf4H3Eyw",
+      "head_sha": "d15cb2e6636663fc144ad46eae1ba302470be212",
+      "url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/jobs/136910324939",
+      "html_url": "https://github.com/GafurAbdulin/pygoat/actions/runs/44925424537/job/136910324939",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-21T16:35:40Z",
+      "started_at": "2026-11-21T16:35:42Z",
+      "completed_at": "2026-11-21T16:37:36Z",
+      "name": "Deploy own image and run ZAP DAST",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-21T16:35:43Z",
+          "completed_at": "2026-11-21T16:35:44Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-21T16:35:44Z",
+          "completed_at": "2026-11-21T16:35:45Z"
+        },
+        {
+          "name": "Build PyGoat from this commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-21T16:35:45Z",
+          "completed_at": "2026-11-21T16:36:23Z"
+        },
+        {
+          "name": "Initialize database and static files",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-21T16:36:23Z",
+          "completed_at": "2026-11-21T16:36:27Z"
+        },
+        {
+          "name": "Start PyGoat on loopback",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-21T16:36:27Z",
+          "completed_at": "2026-11-21T16:36:27Z"
+        },
+        {
+          "name": "Wait for an HTTP response below 400",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-21T16:36:27Z",
+          "completed_at": "2026-11-21T16:36:29Z"
+        },
+        {
+          "name": "ZAP baseline scan",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-21T16:36:29Z",
+          "completed_at": "2026-11-21T16:37:31Z"
+        },
+        {
+          "name": "Capture application logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-21T16:37:31Z",
+          "completed_at": "2026-11-21T16:37:31Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-21T16:37:31Z",
+          "completed_at": "2026-11-21T16:37:33Z"
+        },
+        {
+          "name": "Remove the lab container",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-21T16:37:33Z",
+          "completed_at": "2026-11-21T16:37:33Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-21T16:37:33Z",
+          "completed_at": "2026-11-21T16:37:33Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-21T16:37:33Z",
+          "completed_at": "2026-11-21T16:37:33Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/check-runs/136910324939",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000010,
+      "runner_name": "GitHub Actions 1000000010",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 136910325082,
+      "run_id": 44925424537,
+      "workflow_name": "DevSecOps Lab 5",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/runs/44925424537",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOV2xkzM8AAAAf4H3FWg",
+      "head_sha": "d15cb2e6636663fc144ad46eae1ba302470be212",
+      "url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/jobs/136910325082",
+      "html_url": "https://github.com/GafurAbdulin/pygoat/actions/runs/44925424537/job/136910325082",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-21T16:35:40Z",
+      "started_at": "2026-11-21T16:35:42Z",
+      "completed_at": "2026-11-21T16:35:50Z",
+      "name": "SQL injection regression check",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-21T16:35:43Z",
+          "completed_at": "2026-11-21T16:35:44Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-21T16:35:44Z",
+          "completed_at": "2026-11-21T16:35:45Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-21T16:35:45Z",
+          "completed_at": "2026-11-21T16:35:45Z"
+        },
+        {
+          "name": "Run python -m pip install Flask==3.1.3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-21T16:35:45Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        },
+        {
+          "name": "Run python scripts/check_sql_injection.py",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-21T16:35:47Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-21T16:35:47Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-21T16:35:47Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-21T16:35:47Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/check-runs/136910325082",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000011,
+      "runner_name": "GitHub Actions 1000000011",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 136910325139,
+      "run_id": 44925424537,
+      "workflow_name": "DevSecOps Lab 5",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/runs/44925424537",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOV2xkzM8AAAAf4H3Fkw",
+      "head_sha": "d15cb2e6636663fc144ad46eae1ba302470be212",
+      "url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/jobs/136910325139",
+      "html_url": "https://github.com/GafurAbdulin/pygoat/actions/runs/44925424537/job/136910325139",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-21T16:35:40Z",
+      "started_at": "2026-11-21T16:35:42Z",
+      "completed_at": "2026-11-21T16:37:18Z",
+      "name": "Build and Docker Scout scan",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-21T16:35:43Z",
+          "completed_at": "2026-11-21T16:36:08Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-21T16:36:08Z",
+          "completed_at": "2026-11-21T16:36:09Z"
+        },
+        {
+          "name": "Build the repository image",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-21T16:36:09Z",
+          "completed_at": "2026-11-21T16:36:44Z"
+        },
+        {
+          "name": "Check DockerHub secrets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-21T16:36:44Z",
+          "completed_at": "2026-11-21T16:36:44Z"
+        },
+        {
+          "name": "Docker Scout critical and high CVEs",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-21T16:36:44Z",
+          "completed_at": "2026-11-21T16:37:15Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-21T16:37:15Z",
+          "completed_at": "2026-11-21T16:37:16Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-21T16:37:16Z",
+          "completed_at": "2026-11-21T16:37:16Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-21T16:37:16Z",
+          "completed_at": "2026-11-21T16:37:16Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/check-runs/136910325139",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000012,
+      "runner_name": "GitHub Actions 1000000012",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 136910325229,
+      "run_id": 44925424537,
+      "workflow_name": "DevSecOps Lab 5",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/runs/44925424537",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOV2xkzM8AAAAf4H3F7Q",
+      "head_sha": "d15cb2e6636663fc144ad46eae1ba302470be212",
+      "url": "https://api.github.com/repos/GafurAbdulin/pygoat/actions/jobs/136910325229",
+      "html_url": "https://github.com/GafurAbdulin/pygoat/actions/runs/44925424537/job/136910325229",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-21T16:35:40Z",
+      "started_at": "2026-11-21T16:35:42Z",
+      "completed_at": "2026-11-21T16:35:51Z",
+      "name": "Bandit source scan",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-21T16:35:43Z",
+          "completed_at": "2026-11-21T16:35:43Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-21T16:35:43Z",
+          "completed_at": "2026-11-21T16:35:44Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-21T16:35:44Z",
+          "completed_at": "2026-11-21T16:35:44Z"
+        },
+        {
+          "name": "Run python -m pip install bandit==1.9.4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-21T16:35:44Z",
+          "completed_at": "2026-11-21T16:35:47Z"
+        },
+        {
+          "name": "Collect medium and high findings at all confidence levels",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-21T16:35:47Z",
+          "completed_at": "2026-11-21T16:35:48Z"
+        },
+        {
+          "name": "Apply the lab's medium severity and confidence gate",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-11-21T16:35:48Z",
+          "completed_at": "2026-11-21T16:35:49Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-21T16:35:49Z",
+          "completed_at": "2026-11-21T16:35:50Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-21T16:35:50Z",
+          "completed_at": "2026-11-21T16:35:50Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-21T16:35:50Z",
+          "completed_at": "2026-11-21T16:35:50Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-21T16:35:50Z",
+          "completed_at": "2026-11-21T16:35:50Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/GafurAbdulin/pygoat/check-runs/136910325229",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000013,
+      "runner_name": "GitHub Actions 1000000013",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -15,3 +15,6 @@ bin
 # vscode
 .vscode/
 
+# Downloaded CI artifact archives; extracted reports are committed as evidence.
+evidence/artifact-*.zip
+

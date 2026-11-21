@@ -1,0 +1,31 @@
+{
+  "scope": "Local collection hashes of scan reports; Git checkout may normalize line endings",
+  "files": {
+    "bandit-after-all.json": "4bfcf7526f25d1c41e8c4d6626d5f68c2b2d14c03145363d2780376fcefab613",
+    "bandit-after.json": "41542346650d47d9b8aba09c5b2eae06bd45a1edc0bf3374afb7d37f48519c67",
+    "bandit-before-all.json": "56cbe906739d120832abdadb384c7f6eee1cb383285c22ac2db3e8ac3872aa5d",
+    "bandit-before.json": "2f18b5d5a7b0d1c78452a974eec61ea422bc2b095c404d68b824ca855dfee962",
+    "dast-summary.md": "44e4890ef983d72f2c12ac568dd6d008c017392bdc7f8382a8309cae309c0132",
+    "github-jobs-44925225248.json": "622ba67e8d23d3c4fd2d88e0c39e8dca1be898bf68a177ad221b6bd99f9c7590",
+    "github-jobs-44925424537.json": "cfe1ccde01d0740d331bd822f542c0ebeca917b27c7b014964d796944c7e3166",
+    "github-runs.json": "71d1b1a6264afa7d53017766d222eb7f1e5894a96d72f82588c5fe4d78a59998",
+    "patch-comparison.json": "d40577afd89fe0576cdae5f3d5eca1ab6f478dff11b75b9e117ea16424aadc22",
+    "pipeline-after/bandit/bandit-all-confidence.json": "aaa8b7e2617f8be9091e09ba69dc109011a78ba51e5ce983c311a3ade8f1761a",
+    "pipeline-after/bandit/bandit-report.json": "9f5989f9eaf83892c91c46c542465a0077a157a56165056243f02dc47c7b9a3e",
+    "pipeline-after/scout/scout-report.sarif": "819b7370ca4c94f888c2de74ca4a13cd3eaa3c73377ad31e80e57df761e9884c",
+    "pipeline-after/zap/exit-code.txt": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "pipeline-after/zap/zap-report.html": "0ec12a0b27ef49b23df6600552d3785f07d04779b100182f6a606d7d482057af",
+    "pipeline-after/zap/zap-report.json": "d693614bb2bcef3fbf310eecaeedb33d3fc6db7887abab7fd899ac5349d71ec3",
+    "pipeline-after/zap/zap-report.md": "85ed49f3240a838d64d3eefbb861e31ba78043046c438db1f10f49bba6467931",
+    "pipeline-before/bandit/bandit-all-confidence.json": "43f6f4b225fcc2e60f785836c62704ed5e47759384d07eba11fda19e88429f6e",
+    "pipeline-before/bandit/bandit-report.json": "67131afcddb8bad4666eb7abf79ea71f28fced396f87745d8c8a6994b49e055f",
+    "pipeline-before/scout/scout-report.sarif": "819b7370ca4c94f888c2de74ca4a13cd3eaa3c73377ad31e80e57df761e9884c",
+    "pipeline-before/zap/exit-code.txt": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "pipeline-before/zap/zap-report.html": "640211677d77bc15f95e9bf9a4fda7782f9a0fd4e226ccb5b02790460b3bf5bf",
+    "pipeline-before/zap/zap-report.json": "d8ac14a0a6c0b7d490a412d84b7dec819725245b941732e43074d104fbc1bab8",
+    "pipeline-before/zap/zap-report.md": "e19ae0a8f39e8ade80993e92f698a1d5f77c3855b51aa38f2a36a6569b3dab37",
+    "scout-local.sarif": "f653262797a8c28c188eaec8d4ad7a40a4f7bc42b6257a08a73d75af59fe7585",
+    "sql-after.json": "cb92d62e7f45a826f39ffd18f64ed91bd188167379d2bef19e9818456c380262",
+    "sql-before.json": "111b622d5e0e826369def59b1e57bf58b92d0c31a804100d95ca9f880d2d7bb4"
+  }
+}
