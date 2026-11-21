@@ -1,0 +1,38 @@
+{
+  "upstream_commit": "2aa4cc14f251e4a780e94e200aed6b36a5b15c21",
+  "baseline_commit": "1916a2a",
+  "scanner": "Bandit 1.9.4",
+  "before_findings": 55,
+  "after_findings": 54,
+  "before_by_severity": {
+    "HIGH": 23,
+    "MEDIUM": 32
+  },
+  "after_by_severity": {
+    "HIGH": 23,
+    "MEDIUM": 31
+  },
+  "removed_finding": {
+    "test_id": "B608",
+    "path": "dockerized_labs/sql_injection_lab/app.py",
+    "reason": "SQL values bound with SQLite placeholders"
+  },
+  "before_sql_test": {
+    "source": "dockerized_labs\\sql_injection_lab\\app.py",
+    "expected_state": "vulnerable",
+    "valid_login_succeeds": true,
+    "incorrect_password_rejected": true,
+    "sql_injection_bypasses_login": true,
+    "apostrophe_handled_as_data": null,
+    "result": "PASS"
+  },
+  "after_sql_test": {
+    "source": "dockerized_labs\\sql_injection_lab\\app.py",
+    "expected_state": "patched",
+    "valid_login_succeeds": true,
+    "incorrect_password_rejected": true,
+    "sql_injection_bypasses_login": false,
+    "apostrophe_handled_as_data": true,
+    "result": "PASS"
+  }
+}

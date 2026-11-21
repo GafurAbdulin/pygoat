@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import sqlite3
 import os
 from pathlib import Path
+from contextlib import closing
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your-secret-key-here"
@@ -46,16 +47,12 @@ def lab():
         username = request.form.get("username", "")
         password = request.form.get("password", "")
 
-        # Vulnerable SQL query construction (intentional)
-        sql_query = (
-            f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-        )
+        # Bind input as data so it cannot change the SQL command structure.
+        sql_query = "SELECT * FROM users WHERE username=? AND password=?"
 
         try:
-            conn = sqlite3.connect("database.db")
-            c = conn.cursor()
-            result = c.execute(sql_query).fetchone()
-            conn.close()
+            with closing(sqlite3.connect("database.db")) as conn:
+                result = conn.execute(sql_query, (username, password)).fetchone()
 
             if result:
                 return render_template("lab.html", logged_in_user=result[0])

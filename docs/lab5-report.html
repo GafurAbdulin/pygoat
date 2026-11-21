@@ -1,0 +1,89 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<title>Lab 5 — DevSecOps | PyGoat</title><style>
+body{font:16px/1.6 system-ui,sans-serif;color:#172033;max-width:1000px;margin:48px auto;padding:0 24px}
+h1,h2,h3{line-height:1.2}h1{font-size:36px}h2{margin-top:40px;border-bottom:2px solid #dbe3ee;padding-bottom:10px}
+a{color:#174eb6}table{border-collapse:collapse;width:100%;margin:20px 0;font-size:14px}
+th,td{text-align:left;vertical-align:top;border:1px solid #ccd5e2;padding:10px}th{background:#eef3fa}
+code,pre{font-family:Consolas,monospace;background:#f1f4f8}pre{padding:16px;overflow-wrap:anywhere;white-space:pre-wrap}
+.note{border-left:4px solid #d18b12;padding:12px 18px;background:#fff7e5}
+@media print{body{margin:0;max-width:none;font-size:11pt}h2,h3{break-after:avoid}tr{break-inside:avoid}a{color:inherit}}
+</style><h1>Lab 5 — DevSecOps</h1><p>Security scanning and remediation of PyGoat with GitHub Actions.</p>
+<p><strong>Repository:</strong> <a href="https://github.com/GafurAbdulin/pygoat">https://github.com/GafurAbdulin/pygoat</a><br>
+<strong>Team:</strong> Gafur Abdulin; three team member names pending confirmation.<br>
+<strong>Upstream baseline:</strong> <code>2aa4cc14f251e4a780e94e200aed6b36a5b15c21</code><br>
+<strong>Report generated:</strong> 2026-11-21T16:35:10+00:00</p>
+<h2>1. Repository and scope</h2>
+<p>A public fork was created under GafurAbdulin. The application deliberately contains security weaknesses. The current upstream version separates practical exercises into Flask containers; the main website uses Django. Source scanning covers both. The unauthenticated DAST scan covers only the main website, not every exercise container.</p>
+<h2>2. CI pipeline</h2>
+<p>The workflow is stored in <code>.github/workflows/devsecops.yml</code>, runs on every push, and supports manual dispatch. Every job uses <code>ubuntu-latest</code>.</p>
+<table><tr><th>Job</th><th>Purpose</th><th>Evidence</th></tr><tr><td>sast_scan</td><td>Bandit 1.9.4; medium/high severity with medium/high confidence gate; supplemental report at all confidence levels</td><td>bandit-findings artifact</td></tr><tr><td>image_scan</td><td>Build own Dockerfile; Docker Scout critical/high CVE gate</td><td>docker-scout-findings SARIF artifact</td></tr><tr><td>dast_scan</td><td>Build own image; migrate and seed database; wait for HTTP readiness; run ZAP baseline</td><td>zap-findings HTML/JSON/Markdown and application logs</td></tr><tr><td>patch_verification</td><td>Exercise actual SQL lab login using an isolated SQLite database</td><td>Job log with structured regression results</td></tr></table>
+<p>The DAST job has no <code>needs</code> dependency, so Bandit or Scout findings do not prevent it from running. Reports upload with <code>if: always()</code>. ZAP exit codes 1/2 represent findings; code 3 is treated as an execution failure. A finding gate may fail as expected; build, authentication, or scan-engine errors must be resolved separately.</p>
+<p>Docker Scout uses repository secrets <code>DOCKERHUB_USERNAME</code> and <code>DOCKERHUB_PASSWORD</code>. The latter can contain a DockerHub access token. The image is scanned locally on the runner and does not need to be published.</p>
+<p>Build compatibility adjustment: PyYAML was changed from 5.1 to 6.0.2 to use a Python 3.11-compatible wheel. This dependency change is separate from the code-level bonus fix. Other vulnerable dependencies remain available for scan analysis.</p>
+<h3>Pipeline run evidence</h3>
+<ul>
+<li><a href="https://github.com/GafurAbdulin/pygoat/actions/runs/44925225248">Run 1: Add DevSecOps scanning pipeline and vulnerable baseline evidence — in_progress</a>; commit <code>1916a2a5f1cddc2cefe76759e77c7391f3aac74f</code></li>
+</ul>
+<h3>Local SAST evidence</h3>
+<table><tr><th>Report</th><th>Before</th><th>After</th></tr><tr><td>Medium/high findings, all confidence levels</td><td>55</td><td>54</td></tr><tr><td>Medium/high findings, medium/high confidence gate</td><td>53</td><td>53</td></tr><tr><td>SQL injection findings (B608)</td><td>1</td><td>0</td></tr></table>
+<p>The original SQL finding has LOW Bandit confidence, so the required <code>-ll -ii</code> report excludes it. The supplemental <code>-ll</code> report preserves it. The route-level regression confirms that this particular finding is exploitable, rather than relying only on a heuristic warning.</p>
+<h3>Local Docker Scout evidence</h3>
+<table><tr><th>Metric</th><th>Count</th></tr><tr><td>SARIF result entries (including repeated CVEs)</td><td>126</td></tr><tr><td>Distinct CVE identifiers</td><td>119</td></tr><tr><td>Distinct CRITICAL CVEs</td><td>11</td></tr><tr><td>Distinct HIGH CVEs</td><td>108</td></tr></table>
+<p>Counts come from the saved SARIF report. A CVE can appear against multiple packages or locations. Affected versions do not prove every vulnerable code path is reachable. The local scan completed; the CI action separately gates critical/high findings.</p>
+<h2>3. Dynamic application security testing</h2>
+<p class="note">Pending: actual ZAP scan output. No DAST findings are claimed until a report is available.</p>
+<h2>4. Four distinct vulnerability analyses</h2>
+<p>All four selected findings have MEDIUM severity in Bandit. CVSS scores below are analyst estimates for the stated direct-access exercise scenario, not scores published by CWE or assigned CVEs. CWE entries classify weaknesses and do not supply a universal CVSS score. For the proxied multi-user deployment, authentication and isolation change exposure; an ordinary authenticated account may be required to start/access an exercise.</p>
+<p>Shared CVSS assumptions: network reachable endpoint (AV:N), low attack complexity (AC:L), no prior application privileges in the directly exposed exercise (PR:N), no victim interaction (UI:N), and unchanged security authority (S:U). The source routes themselves have no authentication decorator. The reverse-proxy deployment should be assessed separately.</p>
+<h3>Member 1 — SQL injection</h3><p><strong>Evidence:</strong> B608, MEDIUM; baseline <code>dockerized_labs/sql_injection_lab/app.py:51</code>. 
+<a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89</a>.</p>
+<p><strong>Estimated CVSS v3.1:</strong> 8.2 (High)<br><code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N</code></p>
+<p>POST /lab interpolated username and password into a SELECT statement. A username containing an SQL comment changed the WHERE clause and bypassed the password comparison. The regression test confirmed that the vulnerable route displayed a successful login with an incorrect password.</p>
+<p>Confidentiality is High because query manipulation can disclose the local users table. Integrity is Low because identity presentation can be forged. Availability is None in this conservative model: this path executes one SELECT, and destructive multi-statement execution was not demonstrated. The page displays a successful identity; the test does not claim it establishes a persistent authenticated session.</p>
+<p>Use SQLite placeholders and bind the credentials separately. The bonus patch implements this change. No prior privileges are needed when this exercise is exposed directly.</p>
+<h3>Member 2 — Evaluation of untrusted Python</h3><p><strong>Evidence:</strong> B307, MEDIUM; baseline <code>dockerized_labs/command_injection_lab/app.py:49</code>. 
+<a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95</a>.</p>
+<p><strong>Estimated CVSS v3.1:</strong> 9.8 (Critical)<br><code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code></p>
+<p>POST /lab2 passes the user-controlled val field to eval(expression). Python expressions can invoke functions, so a field intended for calculation can run code with the Flask process&#x27;s permissions.</p>
+<p>Potential consequences include reading application secrets, modifying writable application data, and stopping the process. Confidentiality, Integrity, and Availability are therefore High in the direct-access scenario. Container execution does not automatically imply host compromise.</p>
+<p>Use a restricted arithmetic parser with an explicit operator allowlist. ast.literal_eval is suitable only if the feature should accept literal data, not arbitrary arithmetic. No prior privileges are needed at the directly exposed route.</p>
+<h3>Member 3 — Pickle cookie deserialization</h3><p><strong>Evidence:</strong> B301, MEDIUM; baseline <code>dockerized_labs/software_integrity_lab/app.py:44</code>. 
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502</a>.</p>
+<p><strong>Estimated CVSS v3.1:</strong> 9.8 (Critical)<br><code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code></p>
+<p>GET /lab1 base64-decodes the client-controlled token cookie and passes it to pickle.loads. Base64 provides encoding, not authenticity. Pickle can invoke callable objects during deserialization before the later admin attribute check.</p>
+<p>An attacker could execute code as the application process, disclose secrets, alter writable data, or deny service. This supports High impact for all three impact metrics. The attacker needs control of their own HTTP cookie, not a valid administrator account.</p>
+<p>Replace pickle with a safe data format and retain authorization state on the server. If client data must be signed, use a managed secret and validate the data schema; never restore untrusted Python objects.</p>
+<h3>Member 4 — Unsafe YAML object construction</h3><p><strong>Evidence:</strong> B506, MEDIUM; baseline <code>dockerized_labs/a9_uckv_lab/app.py:62</code>. 
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502</a>.</p>
+<p><strong>Estimated CVSS v3.1:</strong> 9.8 (Critical)<br><code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code></p>
+<p>POST /upload_yaml accepts a YAML file and calls yaml.load(file.stream, Loader=yaml.Loader). This loader can construct Python objects from YAML tags. Filename-extension validation and the 16 MB upload limit do not restrict those tags.</p>
+<p>Object construction can lead to code execution with the service&#x27;s privileges. Potential impact includes data disclosure, tampering, and service interruption. This is a separate upload endpoint and parser from the pickle-cookie vulnerability, despite sharing CWE-502.</p>
+<p>Use yaml.safe_load and enforce a schema containing only permitted scalar, list, and mapping values. A newer PyYAML version alone does not make an explicit unsafe Loader safe. Direct endpoint access requires no application privileges.</p>
+<p>For the three code-execution scenarios, changing only PR:N to PR:L for an authenticated proxy reduces the estimated base score from 9.8 to 8.8. Deployment-specific access controls must be considered rather than treating the direct-container estimate as universal.</p>
+<h2>5. Bonus: code-level SQL injection fix</h2>
+<p>The vulnerable f-string query was replaced by a constant SQL statement containing two <code>?</code> placeholders. Credentials are passed as a separate tuple to <code>execute</code>. A closing context ensures the SQLite connection is released on both success and failure.</p>
+<pre>sql_query = "SELECT * FROM users WHERE username=? AND password=?"
+with closing(sqlite3.connect("database.db")) as conn:
+    result = conn.execute(sql_query, (username, password)).fetchone()</pre>
+<p>The regression invokes the actual Flask route against a temporary database. It checks a correct login, an incorrect password, an injection attempt, and an apostrophe in an ordinary username. Before the fix the injection succeeds; after the fix it is treated as data and rejected.</p>
+<table><tr><th>Check</th><th>Before</th><th>After</th></tr><tr><td>valid_login_succeeds</td><td>True</td><td>True</td></tr><tr><td>incorrect_password_rejected</td><td>True</td><td>True</td></tr><tr><td>sql_injection_bypasses_login</td><td>True</td><td>False</td></tr><tr><td>apostrophe_handled_as_data</td><td>None</td><td>True</td></tr><tr><td>result</td><td>PASS</td><td>PASS</td></tr></table>
+<p>Bandit still fails because other intentional weaknesses remain. Its confidence-filtered gate need not change when a LOW-confidence finding is fixed; the all-confidence report shows the removal. Docker Scout inventories dependency/OS CVEs, so a parameterized SQL query does not remove those CVEs. ZAP scanning only the main website cannot validate a route inside an unstarted exercise container; the separate route regression provides that functional evidence.</p>
+<h2>6. Evidence files and remaining submission items</h2><ul>
+<li><a href="../evidence/bandit-after-all.json">evidence/bandit-after-all.json</a></li>
+<li><a href="../evidence/bandit-after.json">evidence/bandit-after.json</a></li>
+<li><a href="../evidence/bandit-before-all.json">evidence/bandit-before-all.json</a></li>
+<li><a href="../evidence/bandit-before.json">evidence/bandit-before.json</a></li>
+<li><a href="../evidence/github-jobs-44925225248.json">evidence/github-jobs-44925225248.json</a></li>
+<li><a href="../evidence/github-runs.json">evidence/github-runs.json</a></li>
+<li><a href="../evidence/manifest.json">evidence/manifest.json</a></li>
+<li><a href="../evidence/patch-comparison.json">evidence/patch-comparison.json</a></li>
+<li><a href="../evidence/scout-local.sarif">evidence/scout-local.sarif</a></li>
+<li><a href="../evidence/sql-after.json">evidence/sql-after.json</a></li>
+<li><a href="../evidence/sql-before.json">evidence/sql-before.json</a></li>
+</ul><p>Before submission: fill in the remaining three names; ensure each member reviews their assigned analysis; include completed baseline and patched GitHub Actions run links and their artifacts. Pending entries are explicitly marked and must not be represented as completed scans.</p>
+<h2>References</h2><ul>
+<li><a href="https://github.com/adeyosemanputra/pygoat">PyGoat upstream source and installation instructions</a></li>
+<li><a href="https://github.com/docker/scout-action">Docker Scout Action inputs</a></li>
+<li><a href="https://www.zaproxy.org/docs/docker/baseline-scan/">ZAP baseline behavior and exit codes</a></li>
+<li><a href="https://www.first.org/cvss/v3.1/specification-document">FIRST CVSS v3.1 specification</a></li>
+</ul></html>
