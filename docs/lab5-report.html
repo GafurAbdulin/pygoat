@@ -78,30 +78,13 @@ with closing(sqlite3.connect("database.db")) as conn:
 <p>The regression invokes the actual Flask route against a temporary database. It checks a correct login, an incorrect password, an injection attempt, and an apostrophe in an ordinary username. Before the fix the injection succeeds; after the fix it is treated as data and rejected.</p>
 <table><tr><th>Check</th><th>Before</th><th>After</th></tr><tr><td>valid_login_succeeds</td><td>True</td><td>True</td></tr><tr><td>incorrect_password_rejected</td><td>True</td><td>True</td></tr><tr><td>sql_injection_bypasses_login</td><td>True</td><td>False</td></tr><tr><td>apostrophe_handled_as_data</td><td>None</td><td>True</td></tr><tr><td>result</td><td>PASS</td><td>PASS</td></tr></table>
 <p>Bandit still fails because other intentional weaknesses remain. Its confidence-filtered gate need not change when a LOW-confidence finding is fixed; the all-confidence report shows the removal. Docker Scout inventories dependency/OS CVEs, so a parameterized SQL query does not remove those CVEs. ZAP scanning only the main website cannot validate a route inside an unstarted exercise container; the separate route regression provides that functional evidence.</p>
-<h2>6. Evidence files</h2><ul>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/bandit-after-all.json">evidence/bandit-after-all.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/bandit-after.json">evidence/bandit-after.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/bandit-before-all.json">evidence/bandit-before-all.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/bandit-before.json">evidence/bandit-before.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/github-jobs-44925225248.json">evidence/github-jobs-44925225248.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/github-jobs-44925424537.json">evidence/github-jobs-44925424537.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/github-runs.json">evidence/github-runs.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/manifest.json">evidence/manifest.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/patch-comparison.json">evidence/patch-comparison.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/bandit/bandit-all-confidence.json">evidence/pipeline-after/bandit/bandit-all-confidence.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/bandit/bandit-report.json">evidence/pipeline-after/bandit/bandit-report.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/scout/scout-report.sarif">evidence/pipeline-after/scout/scout-report.sarif</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/zap/zap-report.html">evidence/pipeline-after/zap/zap-report.html</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/zap/zap-report.json">evidence/pipeline-after/zap/zap-report.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/bandit/bandit-all-confidence.json">evidence/pipeline-before/bandit/bandit-all-confidence.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/bandit/bandit-report.json">evidence/pipeline-before/bandit/bandit-report.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/scout/scout-report.sarif">evidence/pipeline-before/scout/scout-report.sarif</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/zap/zap-report.html">evidence/pipeline-before/zap/zap-report.html</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/zap/zap-report.json">evidence/pipeline-before/zap/zap-report.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/scout-local.sarif">evidence/scout-local.sarif</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/sql-after.json">evidence/sql-after.json</a></li>
-<li><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/sql-before.json">evidence/sql-before.json</a></li>
-</ul><p>Each team member should review their assigned vulnerability analysis before submission. Pending execution evidence, if any, is explicitly marked in the relevant section.</p>
+<h2>6. Evidence</h2>
+<table><tr><th>Report</th><th>Before fix</th><th>After fix</th></tr>
+<tr><td>Bandit source scan</td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/bandit/bandit-all-confidence.json">Before</a></td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/bandit/bandit-all-confidence.json">After</a></td></tr>
+<tr><td>Docker Scout image scan</td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/scout/scout-report.sarif">Before</a></td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/scout/scout-report.sarif">After</a></td></tr>
+<tr><td>ZAP website scan</td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-before/zap/zap-report.html">Before</a></td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/pipeline-after/zap/zap-report.html">After</a></td></tr>
+<tr><td>SQL injection regression check</td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/sql-before.json">Before</a></td><td><a href="https://github.com/GafurAbdulin/pygoat/blob/master/evidence/sql-after.json">After</a></td></tr>
+</table>
 <h2>References</h2><ul>
 <li><a href="https://github.com/adeyosemanputra/pygoat">PyGoat upstream source and installation instructions</a></li>
 <li><a href="https://github.com/docker/scout-action">Docker Scout Action inputs</a></li>

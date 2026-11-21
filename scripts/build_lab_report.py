@@ -157,12 +157,16 @@ parts.append(table(["Check", "Before", "After"], [
     [key, read("sql-before.json").get(key), read("sql-after.json").get(key)] for key in
     ["valid_login_succeeds", "incorrect_password_rejected", "sql_injection_bypasses_login", "apostrophe_handled_as_data", "result"]]))
 parts += ['<p>Bandit still fails because other intentional weaknesses remain. Its confidence-filtered gate need not change when a LOW-confidence finding is fixed; the all-confidence report shows the removal. Docker Scout inventories dependency/OS CVEs, so a parameterized SQL query does not remove those CVEs. ZAP scanning only the main website cannot validate a route inside an unstarted exercise container; the separate route regression provides that functional evidence.</p>',
-          '<h2>6. Evidence files</h2><ul>']
-for path in sorted(EVIDENCE.rglob("*")):
-    if path.is_file() and path.suffix in {".json", ".sarif", ".html"}:
-        relative = path.relative_to(ROOT).as_posix()
-        parts.append(f'<li><a href="{REPOSITORY}/blob/master/{relative}">{relative}</a></li>')
-parts += ['</ul><p>Each team member should review their assigned vulnerability analysis before submission. Pending execution evidence, if any, is explicitly marked in the relevant section.</p>',
+          '<h2>6. Evidence</h2>',
+          '<table><tr><th>Report</th><th>Before fix</th><th>After fix</th></tr>']
+for label, before_path, after_path in [
+    ("Bandit source scan", "pipeline-before/bandit/bandit-all-confidence.json", "pipeline-after/bandit/bandit-all-confidence.json"),
+    ("Docker Scout image scan", "pipeline-before/scout/scout-report.sarif", "pipeline-after/scout/scout-report.sarif"),
+    ("ZAP website scan", "pipeline-before/zap/zap-report.html", "pipeline-after/zap/zap-report.html"),
+    ("SQL injection regression check", "sql-before.json", "sql-after.json"),
+]:
+    parts.append(f'<tr><td>{label}</td><td><a href="{REPOSITORY}/blob/master/evidence/{before_path}">Before</a></td><td><a href="{REPOSITORY}/blob/master/evidence/{after_path}">After</a></td></tr>')
+parts += ['</table>',
           '<h2>References</h2><ul>',
           '<li><a href="https://github.com/adeyosemanputra/pygoat">PyGoat upstream source and installation instructions</a></li>',
           '<li><a href="https://github.com/docker/scout-action">Docker Scout Action inputs</a></li>',
