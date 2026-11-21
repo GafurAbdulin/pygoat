@@ -3,7 +3,6 @@ import html
 import json
 import subprocess
 from collections import Counter
-from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,8 +37,7 @@ code,pre{font-family:Consolas,monospace;background:#f1f4f8}pre{padding:16px;over
 </style><h1>Lab 5 — DevSecOps</h1><p>Security scanning and remediation of PyGoat with GitHub Actions.</p>"""]
 parts += [f'<p><strong>Repository:</strong> <a href="{REPOSITORY}">{REPOSITORY}</a><br>',
           '<strong>Team:</strong> Fidan Akhmedova; Gafur Abdullin; Stepan Muravev; Polina Krupenikova.<br>',
-          '<strong>Upstream baseline:</strong> <code>2aa4cc14f251e4a780e94e200aed6b36a5b15c21</code><br>',
-          f'<strong>Report generated:</strong> {datetime.now(timezone.utc).isoformat(timespec="seconds")}</p>']
+          '<strong>Upstream baseline:</strong> <code>2aa4cc14f251e4a780e94e200aed6b36a5b15c21</code></p>']
 parts += ['<h2>1. Repository and scope</h2>',
           '<p>A public fork was created under GafurAbdulin. The application deliberately contains security weaknesses. The current upstream version separates practical exercises into Flask containers; the main website uses Django. Source scanning covers both. The unauthenticated DAST scan covers only the main website, not every exercise container.</p>',
           '<h2>2. CI pipeline</h2>',
